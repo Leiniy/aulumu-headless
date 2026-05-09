@@ -24,7 +24,7 @@ export default function HeroSection() {
             In Stock Now. Ships Within 72 Hours.
           </div>
 
-          {/* Main Heading */}
+          {/* Main Heading */}123123
           <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-white leading-tight mb-6 animate-fade-up">
             aulumu E1:
             <br className="hidden sm:block" />

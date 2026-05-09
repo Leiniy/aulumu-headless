@@ -11,7 +11,7 @@ import TrustBadges from '@/components/sections/TrustBadges'
 
 export default function HomePage() {
   return (
-    <>1112233445566
+    <>
       <HeroSection />
       <TrustBadges />
       <IntroSection />

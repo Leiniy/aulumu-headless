@@ -1,4 +1,4 @@
-﻿# aulumu-headless - SPEC
+# aulumu-headless - SPEC
 
 ## 1. Concept
 

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import React from 'react'
 import Button from '@/components/ui/Button'
@@ -26,7 +26,7 @@ export default function HeroSection() {
 
           {/* Main Heading */}
           <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-white leading-tight mb-6 animate-fade-up">
-            eufyMake E1:
+            aulumu E1:
             <br className="hidden sm:block" />
             <span className="text-accent"> The World&apos;s First</span>
             <br className="hidden sm:block" />
@@ -44,7 +44,7 @@ export default function HeroSection() {
               <a href="#features" className="block">Learn More</a>
             </Button>
             <Button variant="outline" size="lg" className="w-full sm:w-auto border-white text-white hover:bg-white hover:text-primary">
-              <a href="/products/eufymake-e1" className="block">Buy Now</a>
+              <a href="/products/aulumu-e1" className="block">Buy Now</a>
             </Button>
           </div>
 
@@ -57,7 +57,7 @@ export default function HeroSection() {
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
                   <p className="text-gray-500 text-sm">Product Image</p>
-                  <p className="text-gray-600 text-xs mt-1">Replace with eufyMake E1 product image</p>
+                  <p className="text-gray-600 text-xs mt-1">Replace with aulumu E1 product image</p>
                 </div>
               </div>
             </div>

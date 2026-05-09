@@ -1,16 +1,16 @@
-'use client'
+﻿'use client'
 
 import React from 'react'
 
 const quotes = [
   {
-    text: 'eufyMake UV Printer E1 brings the traditionally expensive technology to consumers.',
+    text: 'aulumu UV Printer E1 brings the traditionally expensive technology to consumers.',
   },
   {
     text: "It's a serious creative tool, one that lowers the barrier to bespoke product creation, from personalising gifts to giving your craft stall that next-level upgrade.",
   },
   {
-    text: 'Printing on metal surprised me—the ink bonded well and gave a vibrant finish, even on brushed aluminum. Acrylic was another highlight. Once I got the image appropriately mirrored, the result was professional-looking and ready for backlighting.',
+    text: 'Printing on metal surprised me鈥攖he ink bonded well and gave a vibrant finish, even on brushed aluminum. Acrylic was another highlight. Once I got the image appropriately mirrored, the result was professional-looking and ready for backlighting.',
   },
 ]
 

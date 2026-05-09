@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import React, { useState, useEffect } from 'react'
 import TopBanner from './TopBanner'
@@ -40,7 +40,7 @@ export default function Header() {
           <div className="flex items-center justify-between h-16 lg:h-20">
             {/* Logo */}
             <a href="/" className="flex items-center">
-              <span className="text-2xl font-bold text-primary">eufyMake</span>
+              <span className="text-2xl font-bold text-primary">aulumu</span>
             </a>
 
             {/* Desktop Navigation */}

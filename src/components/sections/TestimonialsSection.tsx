@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 
 import React, { useState, useEffect } from 'react'
 
@@ -6,7 +6,7 @@ const testimonials = [
   {
     name: 'Kyouki',
     title: 'IT Manager',
-    quote: 'The eufyMake E1 UV is for anyone who wants to make their world a little more beautiful and unique with high-quality, colorful designs.',
+    quote: 'The aulumu E1 UV is for anyone who wants to make their world a little more beautiful and unique with high-quality, colorful designs.',
   },
   {
     name: 'Kasper',
@@ -21,7 +21,7 @@ const testimonials = [
   {
     name: 'Velf Creations',
     title: 'Software Engineer',
-    quote: 'We\'re thrilled with how the eufyMake E1 complements our laser and 3D printers. It\'s expanded our project scope, allowing us to combine different techniques and materials.',
+    quote: 'We\'re thrilled with how the aulumu E1 complements our laser and 3D printers. It\'s expanded our project scope, allowing us to combine different techniques and materials.',
   },
   {
     name: 'Fern Joseph',
@@ -31,7 +31,7 @@ const testimonials = [
   {
     name: 'Skye Blacklegde',
     title: 'Social Media & Customer Service Manager',
-    quote: 'The eufyMake E1 has unlocked so many opportunities to add my own flair and customization to items I use every day.',
+    quote: 'The aulumu E1 has unlocked so many opportunities to add my own flair and customization to items I use every day.',
   },
 ]
 

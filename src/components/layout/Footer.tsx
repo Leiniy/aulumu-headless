@@ -1,10 +1,10 @@
-'use client'
+﻿'use client'
 
 import React from 'react'
 
 const footerLinks = {
   Products: [
-    { label: 'eufyMake E1', href: '/products/eufymake-e1' },
+    { label: 'aulumu E1', href: '/products/aulumu-e1' },
     { label: 'Accessories', href: '/collections/accessories' },
     { label: 'Filaments', href: '/collections/filaments' },
     { label: 'All Products', href: '/collections/all' },
@@ -29,10 +29,10 @@ const footerLinks = {
 }
 
 const socialLinks = [
-  { name: 'Instagram', href: 'https://www.instagram.com/eufymake', icon: 'instagram' },
-  { name: 'Facebook', href: 'https://www.facebook.com/eufyMake', icon: 'facebook' },
-  { name: 'Twitter', href: 'https://x.com/eufyMake', icon: 'twitter' },
-  { name: 'LinkedIn', href: 'https://www.linkedin.com/company/eufymake', icon: 'linkedin' },
+  { name: 'Instagram', href: 'https://www.instagram.com/aulumu', icon: 'instagram' },
+  { name: 'Facebook', href: 'https://www.facebook.com/aulumu', icon: 'facebook' },
+  { name: 'Twitter', href: 'https://x.com/aulumu', icon: 'twitter' },
+  { name: 'LinkedIn', href: 'https://www.linkedin.com/company/aulumu', icon: 'linkedin' },
 ]
 
 export default function Footer() {
@@ -42,7 +42,7 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 lg:gap-12">
           {/* Brand */}
           <div className="col-span-2 md:col-span-4 lg:col-span-1 mb-8 lg:mb-0">
-            <span className="text-2xl font-bold">eufyMake</span>
+            <span className="text-2xl font-bold">aulumu</span>
             <p className="mt-4 text-gray-400 text-sm leading-relaxed">
               Making creativity accessible to everyone with world-class personal creative tools.
             </p>
@@ -108,7 +108,7 @@ export default function Footer() {
 
             {/* Copyright */}
             <div className="text-gray-400 text-sm text-center md:text-right">
-              <p>© Fantasia Trading LLC 2026</p>
+              <p>漏 Fantasia Trading LLC 2026</p>
               <div className="flex flex-wrap justify-center md:justify-end gap-4 mt-2">
                 <a href="/cookie-notice" className="hover:text-white transition-colors">Cookie Notice</a>
                 <a href="/privacy-policy" className="hover:text-white transition-colors">Privacy Notice</a>

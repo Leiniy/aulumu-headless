@@ -1,4 +1,4 @@
-// Shopify Storefront API client
+﻿// Shopify Storefront API client
 // This module provides functions to fetch data from Shopify Storefront API
 // Currently using mock data - replace with real API calls when Shopify store is configured
 
@@ -84,9 +84,9 @@ function getMockProducts(): ShopifyProduct[] {
   return [
     {
       id: 'mock-1',
-      title: 'eufyMake E1 UV Printer',
-      handle: 'eufymake-e1',
-      description: 'The World\'s First Personal 3D-Texture UV Printer with Amass3D™ Technology',
+      title: 'aulumu E1 UV Printer',
+      handle: 'aulumu-e1',
+      description: 'The World\'s First Personal 3D-Texture UV Printer with Amass3D鈩?Technology',
       priceRange: {
         minVariantPrice: { amount: '1299.00', currencyCode: 'USD' },
       },
@@ -94,7 +94,7 @@ function getMockProducts(): ShopifyProduct[] {
         edges: [{
           node: {
             url: 'https://cdn.shopify.com/s/files/1/0784/0207/9580/files/e1-printer.jpg',
-            altText: 'eufyMake E1 UV Printer',
+            altText: 'aulumu E1 UV Printer',
           },
         }],
       },

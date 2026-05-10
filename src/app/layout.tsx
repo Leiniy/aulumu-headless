@@ -1,16 +1,17 @@
-﻿import type { Metadata } from 'next'
+import type { Metadata } from 'next'
 import './globals.css'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import CookieConsent from '@/components/ui/CookieConsent'
+import { CartProvider } from '@/lib/cart-context'
 
 export const metadata: Metadata = {
   title: 'aulumu - Make it Real | UV Printing Starts Here',
-  description: 'The World\'s First Personal 3D-Texture UV Printer. Create stunning designs on metal, wood, glass, and more with Amass3D鈩?Technology.',
+  description: "The World's First Personal 3D-Texture UV Printer. Create stunning designs on metal, wood, glass, and more with Amass3D\u00aeTechnology.",
   keywords: ['UV printer', '3D printer', 'personal printer', 'creative tools', 'aulumu'],
   openGraph: {
     title: 'aulumu - Make it Real',
-    description: 'The World\'s First Personal 3D-Texture UV Printer',
+    description: "The World's First Personal 3D-Texture UV Printer",
     type: 'website',
   },
 }
@@ -23,10 +24,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <Header />
-        <main>{children}</main>
-        <Footer />
-        <CookieConsent />
+        <CartProvider>
+          <Header />
+          <main>{children}</main>
+          <Footer />
+          <CookieConsent />
+        </CartProvider>
       </body>
     </html>
   )

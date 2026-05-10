@@ -1,58 +1,86 @@
 'use client'
 
-import React from 'react'
-
-const showcases = [
-  {
-    title: 'Small Enough to Fit on Your Desk',
-    description: 'Compact dimensions mean you can set up your creative workspace anywhere.',
-    icon: (
-      <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-      </svg>
-    ),
-  },
-  {
-    title: '3-in-1 Modular Design',
-    description: 'Print, cure, and finish—all in one seamless system.',
-    icon: (
-      <svg className="w-12 h-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-      </svg>
-    ),
-  },
-]
+import React, { useState, useEffect } from 'react'
+import { getProducts, getPage, getProductsByHandles } from '@/lib/shopify'
+import ProductGrid from './ProductGrid'
+import type { ShopifyProduct } from '@/lib/shopify'
 
 export default function ProductShowcase() {
+  const [products, setProducts] = useState<ShopifyProduct[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function load() {
+      try {
+        // 1. 先读取 Home 页面的内容
+        const page = await getPage('home')
+
+        let displayProducts: ShopifyProduct[]
+
+        if (page?.body) {
+          // 2. 解析页面内容中的商品 handle 数组
+          try {
+            const handles: string[] = JSON.parse(page.body)
+            if (Array.isArray(handles) && handles.length > 0) {
+              // 3. 按 handle 获取指定商品
+              const filtered = await getProductsByHandles(handles)
+              displayProducts = filtered
+            } else {
+              displayProducts = await getProducts(12)
+            }
+          } catch {
+            // JSON 解析失败，默认加载全部
+            displayProducts = await getProducts(12)
+          }
+        } else {
+          // 页面为空，默认加载全部
+          displayProducts = await getProducts(12)
+        }
+
+        setProducts(displayProducts)
+      } catch (err) {
+        console.error('Failed to load products:', err)
+        setProducts([])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    load()
+  }, [])
+
   return (
     <section className="py-20 lg:py-28 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
         <div className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-primary mb-4">
-            Compact Size, Limitless Possibilities
+            Shop Our Products
           </h2>
+          <p className="text-text-muted text-lg max-w-2xl mx-auto">
+            Discover our range of personal UV printing solutions
+          </p>
         </div>
 
-        {/* Showcases */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-          {showcases.map((item, index) => (
-            <div
-              key={item.title}
-              className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl p-8 lg:p-12 hover:shadow-lg transition-shadow duration-300"
-            >
-              <div className="w-24 h-24 bg-accent/10 rounded-2xl flex items-center justify-center text-accent mb-8">
-                {item.icon}
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="bg-white rounded-2xl overflow-hidden border border-gray-100 animate-pulse">
+                <div className="aspect-square bg-gray-200" />
+                <div className="p-5 space-y-3">
+                  <div className="h-4 bg-gray-200 rounded w-3/4" />
+                  <div className="h-3 bg-gray-200 rounded w-1/2" />
+                  <div className="h-6 bg-gray-200 rounded w-1/4" />
+                </div>
               </div>
-              <h3 className="text-2xl font-bold text-primary mb-4">
-                {item.title}
-              </h3>
-              <p className="text-text-muted text-lg">
-                {item.description}
-              </p>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : products.length === 0 ? (
+          <div className="text-center py-16 text-gray-400">
+            <p>No products found. Add product handles to the Home page body in Shopify.</p>
+          </div>
+        ) : (
+          <ProductGrid products={products} />
+        )}
       </div>
     </section>
   )

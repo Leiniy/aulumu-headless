@@ -1,8 +1,10 @@
-﻿'use client'
+'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import TopBanner from './TopBanner'
 import MobileMenu from './MobileMenu'
+import CartDrawer from '@/components/ui/CartDrawer'
+import { useCart } from '@/lib/cart-context'
 
 const navItems = [
   { label: 'Products', hasSubmenu: true, subLabel: 'With $400 Gifts' },
@@ -18,6 +20,9 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [openSubmenu, setOpenSubmenu] = useState<string | null>(null)
+  const [cartOpen, setCartOpen] = useState(false)
+  const drawerRef = useRef<HTMLDivElement>(null)
+  const { totalItems } = useCart()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -27,10 +32,23 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  // Close drawer on outside click
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (drawerRef.current && !drawerRef.current.contains(e.target as Node)) {
+        setCartOpen(false)
+      }
+    }
+    if (cartOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [cartOpen])
+
   return (
     <>
       <TopBanner />
-      
+
       <header
         className={`sticky top-0 z-30 bg-white transition-shadow duration-300 ${
           scrolled ? 'shadow-md' : ''
@@ -106,10 +124,19 @@ export default function Header() {
               </button>
 
               {/* Cart */}
-              <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors" aria-label="Cart">
+              <button
+                onClick={() => setCartOpen(true)}
+                className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                aria-label="Cart"
+              >
                 <svg className="w-6 h-6 text-text-main" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                 </svg>
+                {totalItems > 0 && (
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-accent text-white text-xs font-bold rounded-full flex items-center justify-center shadow-md">
+                    {totalItems}
+                  </span>
+                )}
               </button>
 
               {/* User */}
@@ -135,6 +162,39 @@ export default function Header() {
       </header>
 
       <MobileMenu isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
+
+      {/* Cart Drawer */}
+      {cartOpen && (
+        <div className="fixed inset-0 z-50">
+          {/* Backdrop */}
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setCartOpen(false)} />
+
+          {/* Drawer */}
+          <div
+            ref={drawerRef}
+            className="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl flex flex-col"
+            style={{ animation: 'slideInRight 0.3s ease-out' }}
+          >
+            <button
+              onClick={() => setCartOpen(false)}
+              className="absolute right-4 top-4 z-10 w-10 h-10 flex items-center justify-center text-gray-400 hover:text-black transition-colors"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+            <CartDrawer />
+          </div>
+        </div>
+      )}
+
+      <style jsx global>{`
+        @keyframes slideInRight {
+          from { transform: translateX(100%); }
+          to { transform: translateX(0); }
+        }
+      `}</style>
     </>
   )
 }

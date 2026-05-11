@@ -40,7 +40,7 @@ export interface ShopifyPage {
   metafields?: Array<{ key: string; namespace: string; value: string }>
 }
 
-async function shopifyFetch<T = any>(query: string, variables?: Record<string, unknown>): Promise<T> {
+async function shopifyFetch<T = any>(query: string, variables?: Record<string, unknown>, signal?: AbortSignal): Promise<T> {
   const res = await fetch(`https://${SHOPIFY_DOMAIN}/api/2024-01/graphql.json`, {
     method: 'POST',
     headers: {
@@ -48,6 +48,7 @@ async function shopifyFetch<T = any>(query: string, variables?: Record<string, u
       'X-Shopify-Storefront-Access-Token': STOREFRONT_TOKEN!,
     },
     body: JSON.stringify({ query, variables }),
+    signal,
   })
   if (!res.ok) throw new Error(`Shopify API error: ${res.status}`)
   const json = await res.json()
@@ -73,7 +74,7 @@ export async function getProducts(first = 12): Promise<ShopifyProduct[]> {
   }
 }
 
-export async function getPage(handle: string): Promise<ShopifyPage | null> {
+export async function getPage(handle: string, signal?: AbortSignal): Promise<ShopifyPage | null> {
   if (!SHOPIFY_DOMAIN || !STOREFRONT_TOKEN) return null
   try {
     const data = await shopifyFetch<{ page: ShopifyPage | null }>(
@@ -83,7 +84,8 @@ export async function getPage(handle: string): Promise<ShopifyPage | null> {
           metafields(identifiers: [{namespace: "custom", key: "page"}]) { key namespace value }
         }
       }`,
-      { handle }
+      { handle },
+      signal
     )
     return data.page
   } catch {
@@ -93,7 +95,7 @@ export async function getPage(handle: string): Promise<ShopifyPage | null> {
 
 export const getPageWithMetafields = getPage
 
-export async function getProductsByHandles(handles: string[]): Promise<ShopifyProduct[]> {
+export async function getProductsByHandles(handles: string[], signal?: AbortSignal): Promise<ShopifyProduct[]> {
   if (!SHOPIFY_DOMAIN || !STOREFRONT_TOKEN || handles.length === 0) return []
   try {
     const data = await shopifyFetch<{ products: { edges: Array<{ node: ShopifyProduct }> } }>(
@@ -101,7 +103,9 @@ export async function getProductsByHandles(handles: string[]): Promise<ShopifyPr
         products(first: 250) {
           edges { node { id title handle description priceRange { minVariantPrice { amount currencyCode } } images(first: 1) { edges { node { url altText } } } variants(first: 100) { edges { node { id sku price { amount currencyCode } } } } } }
         }
-      }`
+      }`,
+      undefined,
+      signal
     )
     return data.products.edges.map((e) => e.node).filter((p) => handles.includes(p.handle))
   } catch {
@@ -109,7 +113,7 @@ export async function getProductsByHandles(handles: string[]): Promise<ShopifyPr
   }
 }
 
-export async function getProductsBySkuList(skuList: string[]): Promise<ShopifyProduct[]> {
+export async function getProductsBySkuList(skuList: string[], signal?: AbortSignal): Promise<ShopifyProduct[]> {
   if (!SHOPIFY_DOMAIN || !STOREFRONT_TOKEN || skuList.length === 0) return []
   try {
     const data = await shopifyFetch<{ products: { edges: Array<{ node: ShopifyProduct }> } }>(
@@ -118,10 +122,11 @@ export async function getProductsBySkuList(skuList: string[]): Promise<ShopifyPr
           edges { node { id title handle description priceRange { minVariantPrice { amount currencyCode } } images(first: 5) { edges { node { url altText } } } variants(first: 100) { edges { node { id sku price { amount currencyCode } } } } } }
         }
       }`,
-      { first: 250 }
+      { first: 250 },
+      signal
     )
     return data.products.edges.map((e) => e.node).filter((product) =>
-      product.variants.edges.some((v) => skuList.includes(v.node.sku))
+      product.variants.edges.some((v) => skuList.includes(v.node.sku as string))
     )
   } catch {
     return []
@@ -134,6 +139,6 @@ function getMockProducts(): ShopifyProduct[] {
     description: "The World's First Personal 3D-Texture UV Printer",
     priceRange: { minVariantPrice: { amount: '1299.00', currencyCode: 'USD' } },
     images: { edges: [{ node: { url: 'https://cdn.shopify.com/s/files/1/0784/0207/9580/files/e1-printer.jpg', altText: 'aulumu E1 UV Printer' } }] },
-    variants: { edges: [{ node: { id: 'mock-variant-1' } }] },
+    variants: { edges: [{ node: { id: 'mock-variant-1', price: { amount: '0', currencyCode: 'USD' } } }] },
   }]
 }

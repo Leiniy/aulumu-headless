@@ -20,6 +20,22 @@ function tryParseValue(raw: string): unknown {
   try {
     let parsed = JSON.parse(val)
     if (typeof parsed === 'string') parsed = JSON.parse(parsed)
+
+    // 对象数组按属性名聚合：
+    // [{title:"A",image:"..."}] → {title:["A"],image:["..."]}
+    if (Array.isArray(parsed) && parsed.length > 0 && typeof parsed[0] === 'object' && parsed[0] !== null) {
+      const aggregated: Record<string, any[]> = {}
+      for (const item of parsed) {
+        if (typeof item === 'object' && item !== null) {
+          for (const [k, v] of Object.entries(item)) {
+            if (!aggregated[k]) aggregated[k] = []
+            aggregated[k].push(v)
+          }
+        }
+      }
+      return aggregated
+    }
+
     return parsed
   } catch {
     return null

@@ -1,53 +1,55 @@
+import type { ShopifyPage } from './shopify'
+
 export interface ShopifyPageMetafield {
   key: string
   namespace: string
   value: string
 }
 
-// ─── Hero ────────────────────────────────────────────────────────────────────
-export interface HeroSection {
-  type: 'hero'
-  title: string
-  subtitle: string
-  image: string
-  ctaText: string
-  ctaUrl: string
+// ─── Metafield 值解析 ───────────────────────────────────────────────────────
+// components namespace 的值会被 <p> 标签包裹，需要先剥离
+// 同名 key 优先使用 components namespace（Metafield Lite 编辑的），回退到 custom
+
+function stripHtmlTags(html: string): string {
+  return html.replace(/<[^>]*>/g, '').trim()
 }
 
-// ─── Features ─────────────────────────────────────────────────────────────────
-export interface FeaturesSection {
-  type: 'features'
-  title: string
-  items: string[]
-}
-
-// ─── Banner ──────────────────────────────────────────────────────────────────
-export interface BannerSection {
-  type: 'banner'
-  title: string
-  subtitle: string
-  url: string
-}
-
-// ─── Products ─────────────────────────────────────────────────────────────────
-export interface ProductsSection {
-  type: 'products'
-  title: string
-  sku_list?: string[]
-}
-
-// ─── Union ────────────────────────────────────────────────────────────────────
-export type PageSection = HeroSection | FeaturesSection | BannerSection | ProductsSection
-
-// ─── Parse metafield value ───────────────────────────────────────────────────
-export function parsePageSections(value: string): PageSection[] {
-  if (!value) return []
+function tryParseValue(raw: string): unknown {
+  let val = raw
+  if (val.startsWith('<')) val = stripHtmlTags(val)
   try {
-    let parsed = JSON.parse(value)
+    let parsed = JSON.parse(val)
     if (typeof parsed === 'string') parsed = JSON.parse(parsed)
-    if (Array.isArray(parsed)) return parsed as PageSection[]
-    return []
+    return parsed
   } catch {
-    return []
+    return null
   }
+}
+
+/**
+ * 将原始 metafields 转为按 namespace 分组的对象
+ * 结构: { [namespace]: { [key]: parsedValue } }
+ * 例如: { custom: { text: [...], banner: [...] }, components: { text: [...], banner111: [...] } }
+ */
+export function parseMetafields(metafields?: ShopifyPageMetafield[] | null): Record<string, Record<string, any>> {
+  if (!metafields || metafields.length === 0) return {}
+
+  const result: Record<string, Record<string, any>> = {}
+  for (const mf of metafields) {
+    if (!mf.value) continue
+    const parsed = tryParseValue(mf.value)
+    if (parsed === null) continue
+
+    if (!result[mf.namespace]) {
+      result[mf.namespace] = {}
+    }
+    result[mf.namespace][mf.key] = parsed
+  }
+  return result
+}
+
+// ─── 统一模板 Props 类型 ────────────────────────────────────────────────────
+export interface TemplateProps {
+  page: ShopifyPage
+  metafields: Record<string, Record<string, any>>
 }

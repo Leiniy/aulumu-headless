@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import './globals.css'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
-import CookieConsent from '@/components/ui/CookieConsent'
 import { CartProvider } from '@/lib/cart-context'
 
 export const metadata: Metadata = {
@@ -28,7 +27,7 @@ export default function RootLayout({
           <Header />
           <main>{children}</main>
           <Footer />
-          <CookieConsent />
+
         </CartProvider>
       </body>
     </html>

@@ -1,18 +1,10 @@
 import { notFound } from 'next/navigation'
 import { getPageWithMetafields } from '@/lib/shopify'
 import { pageRoutes } from '@/main'
+import { parseMetafields } from '@/lib/section-types'
 
-function parseMetafield(metafields: Array<{key: string; namespace: string; value: string}> | null | undefined) {
-  const mf = metafields?.find((m) => m.namespace === 'custom' && m.key === 'page')
-  if (!mf?.value) return []
-  try {
-    let parsed = JSON.parse(mf.value)
-    if (typeof parsed === 'string') parsed = JSON.parse(parsed)
-    return Array.isArray(parsed) ? parsed : []
-  } catch {
-    return []
-  }
-}
+// 每次请求都重新获取数据，不使用缓存
+export const dynamic = 'force-dynamic'
 
 export default async function Page() {
   const route = pageRoutes.find((r) => r.handle === 'home')
@@ -21,7 +13,7 @@ export default async function Page() {
   const shopifyPage = await getPageWithMetafields('home')
   if (!shopifyPage) notFound()
 
-  const sections = parseMetafield(shopifyPage.metafields)
+  const metafields = parseMetafields(shopifyPage.metafields)
   const Template = (await import(`@/templates/${route.group}/${route.template}/index.tsx`)).default
-  return <Template page={shopifyPage} sections={sections} />
+  return <Template page={shopifyPage} metafields={metafields} />
 }

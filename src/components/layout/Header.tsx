@@ -6,20 +6,9 @@ import MobileMenu from './MobileMenu'
 import CartDrawer from '@/components/ui/CartDrawer'
 import { useCart } from '@/lib/cart-context'
 
-const navItems = [
-  { label: 'Products', hasSubmenu: true, subLabel: 'With $400 Gifts' },
-  { label: 'Product Demo', href: '/demoroom', hot: true },
-  { label: 'Software', hasSubmenu: true },
-  { label: 'Make It Real', hasSubmenu: true },
-  { label: 'About Us', href: '/about-us' },
-  { label: 'Blog', href: '/blogs' },
-  { label: 'Support', hasSubmenu: true },
-]
-
 export default function Header() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [openSubmenu, setOpenSubmenu] = useState<string | null>(null)
   const [cartOpen, setCartOpen] = useState(false)
   const drawerRef = useRef<HTMLDivElement>(null)
   const { totalItems } = useCart()
@@ -61,58 +50,8 @@ export default function Header() {
               <span className="text-2xl font-bold text-primary">aulumu</span>
             </a>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-8">
-              {navItems.map((item) => (
-                <div
-                  key={item.label}
-                  className="relative"
-                  onMouseEnter={() => item.hasSubmenu && setOpenSubmenu(item.label)}
-                  onMouseLeave={() => setOpenSubmenu(null)}
-                >
-                  {item.hasSubmenu ? (
-                    <button className="flex items-center gap-1 py-6 text-text-main hover:text-accent transition-colors font-medium">
-                      {item.label}
-                      {item.subLabel && (
-                        <span className="text-xs bg-accent text-white px-2 py-0.5 rounded-full">
-                          {item.subLabel}
-                        </span>
-                      )}
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                      </svg>
-                    </button>
-                  ) : (
-                    <a
-                      href={item.href || '#'}
-                      className="flex items-center gap-1 py-6 text-text-main hover:text-accent transition-colors font-medium"
-                    >
-                      {item.label}
-                      {item.hot && (
-                        <span className="text-xs bg-red-500 text-white px-2 py-0.5 rounded-full">
-                          HOT
-                        </span>
-                      )}
-                    </a>
-                  )}
-
-                  {/* Submenu */}
-                  {item.hasSubmenu && openSubmenu === item.label && (
-                    <div className="absolute top-full left-0 w-56 bg-white rounded-lg shadow-xl border border-gray-100 py-2">
-                      <a href="#" className="block px-4 py-3 text-text-main hover:bg-gray-50 transition-colors">
-                        Product 1
-                      </a>
-                      <a href="#" className="block px-4 py-3 text-text-main hover:bg-gray-50 transition-colors">
-                        Product 2
-                      </a>
-                      <a href="#" className="block px-4 py-3 text-text-main hover:bg-gray-50 transition-colors">
-                        Product 3
-                      </a>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </nav>
+            {/* Desktop Navigation — 后续从 Shopify 数据驱动 */}
+            <nav className="hidden lg:flex items-center gap-8" />
 
             {/* Actions */}
             <div className="flex items-center gap-2">
